@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="heat">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js">
+    </script>
+    <script src="https://cdn.firebase.com/js/client/1.0.21/firebase.js">
+    </script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.8.2/angularfire.js">
+    </script>
+  </head>
+  <body ng-controller="HeatCtrl">
+    {{ data }}
+    <script type="text/javascript">
+      var app = angular.module("heat", ["firebase"]);
+      app.factory("messages", function($firebase, $rootScope) {
+          var ref = new Firebase("https://flickering-heat-8202.firebaseio.com/");
+          var base = $firebase(ref);
+          return base.$asArray();
+      });
+      app.controller("HeatCtrl", function ($scope, messages) {
+        $scope.user = '';
+        $scope.messages = messages;
+          $scope.add = function (text) {
+            $scope.messages.$add({
+                'content': text,
+                'from': $scope.user || 'secret agent'
+            });
+            $scope.text = '';
+          };
+      });
+    </script>
+  </body>
+</html>
